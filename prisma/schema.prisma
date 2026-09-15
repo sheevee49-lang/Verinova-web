@@ -1,0 +1,78 @@
+// VeriNova Connect — Prisma schema
+// Dev default is SQLite (zero setup). Swap the datasource to postgresql when you're ready to deploy.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int      @id @default(autoincrement())
+  fullName      String
+  email         String   @unique
+  passwordHash  String
+  userType      String   @default("Individual") // Individual, Farmer, Skilled Professional, Business, NGO, Government Agency, Investor, Youth
+  bio           String   @default("")
+  location      String   @default("")
+  profession    String   @default("")
+  skills        String   @default("") // comma-separated
+  createdAt     DateTime @default(now())
+
+  interests           UserInterest[]
+  communitiesCreated   Community[]        @relation("CommunityCreator")
+  communityMemberships CommunityMember[]
+  notifications        Notification[]
+}
+
+model Interest {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+
+  users UserInterest[]
+}
+
+model UserInterest {
+  userId     Int
+  interestId Int
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  interest   Interest @relation(fields: [interestId], references: [id], onDelete: Cascade)
+
+  @@id([userId, interestId])
+}
+
+model Community {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String   @default("")
+  category    String   @default("")
+  county      String   @default("")
+  creatorId   Int?
+  creator     User?    @relation("CommunityCreator", fields: [creatorId], references: [id], onDelete: SetNull)
+  createdAt   DateTime @default(now())
+
+  members CommunityMember[]
+}
+
+model CommunityMember {
+  communityId Int
+  userId      Int
+  joinedAt    DateTime @default(now())
+  community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([communityId, userId])
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  type      String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
