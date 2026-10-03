@@ -17,7 +17,7 @@ export async function PUT(req: NextRequest) {
     prisma.userInterest.deleteMany({ where: { userId } }),
     prisma.userInterest.createMany({
       data: interest_ids.map((interestId: number) => ({ userId, interestId })),
-      skipDuplicates: true,
+    
     }),
   ]);
 
