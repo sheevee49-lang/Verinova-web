@@ -54,7 +54,11 @@ export default function LoginPage() {
     <section className="auth-screen">
       <div className="auth-wrap">
         <div className="auth-hero">
-<Image src="/logo.png" alt="VeriNova Technologies" width={907} height={651} className="brand-logo" style={{ height: '110px', width: 'auto' }} priority />
+<img
+  src="/logo.png"
+  alt="VeriNova Technologies"
+  style={{ height: '110px', width: 'auto', maxWidth: '100%', display: 'block', marginBottom: '2rem' }}
+/>
           <h1>Millions of ideas.<br />One place to meet.</h1>
           <p className="hero-copy">
             Innovation that connects. Technology that empowers. VeriNova Connect brings farmers,
