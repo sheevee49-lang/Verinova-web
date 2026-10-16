@@ -55,14 +55,7 @@ export default function Topbar() {
   return (
     <header className="topbar">
       <div className="topbar-brand">
-<Image
-  src="/logo-icon.png"
-  alt="VeriNova"
-  width={907}
-  height={403}
-  style={{ height: '28px', width: 'auto' }}
-  priority
-/>
+<Image src="/logo-icon.png" alt="VeriNova" width={907} height={403} style={{ height: '28px', width: 'auto' }} priority />
         <span>VeriNova Connect</span>
       </div>
       <nav className="topbar-nav">
