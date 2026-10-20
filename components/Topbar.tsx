@@ -21,12 +21,14 @@ export default function Topbar() {
   const [panelOpen, setPanelOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
+    const [isAdmin, setIsAdmin] = useState(false);
 
-  useEffect(() => {
+    useEffect(() => {
     apiFetch('/notifications').then((d) => {
       setNotifications(d.notifications);
       setUnreadCount(d.unread_count);
     }).catch(() => {});
+    apiFetch('/auth/me').then((d) => setIsAdmin(!!d.user.is_admin)).catch(() => {});
   }, []);
 
   async function togglePanel() {
@@ -59,7 +61,7 @@ export default function Topbar() {
         <span>VeriNova Connect</span>
       </div>
       <nav className="topbar-nav">
-        {NAV_ITEMS.map((item) => (
+{NAV_ITEMS.filter((item) => isAdmin || item.href !== '/dashboard/admin').map((item) => (
           <Link key={item.href} href={item.href} className={`nav-btn ${pathname === item.href ? 'active' : ''}`}>
             {item.label}
           </Link>

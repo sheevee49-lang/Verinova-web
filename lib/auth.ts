@@ -43,3 +43,11 @@ export async function getCurrentUserId(): Promise<number | null> {
   const session = await verifySession(token);
   return session?.userId ?? null;
 }
+// Admins are the emails listed in the ADMIN_EMAILS setting (comma-separated).
+export function isAdminEmail(email: string) {
+  const admins = (process.env.ADMIN_EMAILS || '')
+    .split(',')
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
+  return admins.includes(email.toLowerCase());
+}

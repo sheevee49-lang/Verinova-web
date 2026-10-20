@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
-import { getCurrentUserId } from '@/lib/auth';
+import { getCurrentUserId, isAdminEmail } from '@/lib/auth';
 import { errorResponse } from '@/lib/api-utils';
 
 export async function GET() {
@@ -22,7 +22,9 @@ export async function GET() {
       location: user.location,
       bio: user.bio,
       profession: user.profession,
+      
       skills: user.skills,
+            is_admin: isAdminEmail(user.email),
       interests: user.interests.map((ui) => ({ id: ui.interest.id, name: ui.interest.name })),
     },
   });

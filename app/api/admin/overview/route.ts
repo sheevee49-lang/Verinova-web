@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
-import { getCurrentUserId } from '@/lib/auth';
+import { getCurrentUserId, isAdminEmail } from '@/lib/auth';
 import { errorResponse } from '@/lib/api-utils';
 
 // No role restriction yet — any logged-in user can view this.
@@ -9,7 +9,8 @@ import { errorResponse } from '@/lib/api-utils';
 export async function GET() {
   const userId = await getCurrentUserId();
   if (!userId) return errorResponse('Not authenticated. Please log in.', 401);
-
+  const me = await prisma.user.findUnique({ where: { id: userId }, select: { email: true } });
+  if (!me || !isAdminEmail(me.email)) return errorResponse('Not authorized.', 403);
   const [userCount, communityCount, notificationCount, users, communities, recentNotifications] = await Promise.all([
     prisma.user.count(),
     prisma.community.count(),
